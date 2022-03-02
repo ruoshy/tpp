@@ -1,0 +1,24 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cwc.api.mapper.SeatMapper">
+    <insert id="lock" parameterType="cn.cwc.api.entity.Seat">
+        INSERT INTO seat(`row`, `col`, order_id,arrange_id) VALUES
+        <foreach collection="seats" item="seat" separator=",">
+            (#{seat.row},#{seat.col},#{seat.orderId},#{seat.arrangeId})
+        </foreach>
+    </insert>
+
+    <select id="findAll" parameterType="java.lang.Integer" resultMap="seatMap">
+        SELECT *
+        FROM seat
+        WHERE arrange_id = #{arrangeId}
+    </select>
+    <resultMap id="seatMap" type="cn.cwc.api.entity.Seat">
+        <id column="id" property="id"/>
+        <result column="row" property="row"/>
+        <result column="col" property="col"/>
+        <result column="order_id" property="orderId"/>
+        <result column="arrange_id" property="arrangeId"/>
+    </resultMap>
+</mapper>

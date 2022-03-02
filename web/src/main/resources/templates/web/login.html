@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="/js/iview.css">
+    <script type="text/javascript" src="/js/vue.min.js"></script>
+    <script type="text/javascript" src="/js/iview.min.js"></script>
+    <style>
+        body {
+            background: rgb(243, 245, 248);
+        }
+
+        #login-frame {
+            position: absolute;
+            width: 400px;
+            height: 250px;
+            top: 50%;
+            left: 50%;
+            margin-left: -200px;
+            margin-top: -200px;
+            background: white;
+            box-shadow: #eee 1px 0 5px;
+            border-radius: 5px;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div id="login-frame">
+        <h1>登录</h1>
+        <form action="/verify" method="post">
+            <i-row>
+                <i-col span="24" style="text-align: center;margin-top: 20px;">
+                    <i-input name="phone" size="large" v-model="form.account" placeholder="请输入账号"
+                             style="width: 300px"></i-input>
+                </i-col>
+                <i-col span="24" style="text-align: center;margin-top: 20px;">
+                    <i-input name="password" size="large" v-model="form.password" placeholder="请输入密码"
+                             style="width: 300px"></i-input>
+                </i-col>
+                <i-col span="24" style="text-align: center;margin-top: 20px;">
+                    <i-button size="large" type="primary" style="width: 300px" html-type="submit">登录</i-button>
+                </i-col>
+            </i-row>
+        </form>
+    </div>
+</div>
+<script th:inline="javascript">
+    new Vue({
+        el: '#app',
+        data: {
+            form: {
+                account: '13819773757',
+                password: '123456',
+            }
+        },
+        methods: {}
+    })
+</script>
+</body>
+</html>

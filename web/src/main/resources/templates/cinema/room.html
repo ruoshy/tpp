@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/frame::layout(~{::title},~{::#content})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="content">
+    <div class="panel card">
+        <div class="whole" style="height: 33px">
+            <button type="button" class="btn btn-primary" style="float: right;" onclick="roomAdd()">添加</button>
+        </div>
+        <div th:replace="~{common/assembly::table(colgroup=~{::.film-col},headers=${room_headers},body=~{::.room-body})}">
+            <colgroup class="film-col">
+                <col width="10%"/>
+                <col width="30%"/>
+                <col width="10%"/>
+                <col width="10%"/>
+                <col width="20%"/>
+                <col width="20%"/>
+            </colgroup>
+            <tbody class="room-body">
+            <tr class="table-row" th:each="room,stat:${rooms}">
+                <td>
+                    <div class="table-cell">
+                        <span th:text="${stat.index+1}"></span>
+                        <input type="hidden" name="id" th:value="${room.id}">
+                    </div>
+                </td>
+                <td>
+                    <div class="table-cell"><span th:text="${room.name}"></span></div>
+                </td>
+                <td>
+                    <div class="table-cell"><span th:text="${room.seat}"></span></div>
+                </td>
+                <td>
+                    <div class="table-cell"><span th:text="${room.type}"></span></div>
+                </td>
+                <td>
+                    <div class="table-cell"><span th:text="${room.detail}"></span></div>
+                </td>
+                <td>
+                    <div class="table-cell">
+                        <input type="button" class="btn btn-primary"
+                               value="编辑" th:onclick="|roomEdit(${stat.index})|">
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </div>
+    </div>
+    <div class="modal-mask modal-room-add" style="display: none;">
+        <div class="modal" style="width: 500px;height: 300px">
+            <div class="modal-content">
+                <div class="modal-header">添加</div>
+                <div class="modal-body">
+                    <ul style="margin: 0;padding: 0;list-style: none;">
+                        <li style="margin-bottom: 10px">
+                            <span style="display: inline-block;width: 100px;vertical-align: top;">影厅名称：</span>
+                            <input type="text" name="name" class="input" style="width: 300px">
+                        </li>
+                        <li style="margin-bottom: 10px">
+                            <span style="display: inline-block;width: 100px;vertical-align: top;">座位数：</span>
+                            <input type="text" name="seat" class="input" style="width: 300px">
+                        </li>
+                        <li style="margin-bottom: 10px">
+                            <span style="display: inline-block;width: 100px;vertical-align: top;">荧幕类型：</span>
+                            <input type="text" name="type" class="input" style="width: 300px">
+                        </li>
+                        <li style="margin-bottom: 10px">
+                            <span style="display: inline-block;width: 100px;vertical-align: top;">详细：</span>
+                            <input type="text" name="detail" class="input" style="width: 300px">
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="submitRoomAdd()">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-mask modal-room-edit" style="display: none;">
+        <div class="modal" style="width: 500px;height: 300px">
+            <div class="modal-content">
+                <div class="modal-header">编辑</div>
+                <div class="modal-body">
+                    <input type="hidden" name="id">
+                    <ul style="margin: 0;padding: 0;list-style: none;">
+                        <li style="margin-bottom: 10px">
+                            <span style="display: inline-block;width: 100px;vertical-align: top;">影厅名称：</span>
+                            <input type="text" name="name" class="input" style="width: 300px">
+                        </li>
+                        <li style="margin-bottom: 10px">
+                            <span style="display: inline-block;width: 100px;vertical-align: top;">座位数：</span>
+                            <input type="text" name="seat" class="input" style="width: 300px">
+                        </li>
+                        <li style="margin-bottom: 10px">
+                            <span style="display: inline-block;width: 100px;vertical-align: top;">荧幕类型：</span>
+                            <input type="text" name="type" class="input" style="width: 300px">
+                        </li>
+                        <li style="margin-bottom: 10px">
+                            <span style="display: inline-block;width: 100px;vertical-align: top;">详细：</span>
+                            <input type="text" name="detail" class="input" style="width: 300px">
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="submitRoomEdit()">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/web_frame::layout(~{::title},~{::style},~{::#w-content})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .process {
+            clear: both;
+            width: 1000px;
+            margin: 20px auto 0 auto;
+        }
+
+        .process ul {
+            display: flex;
+        }
+
+        .process li {
+            flex: 1;
+            display: inline-block;
+            color: #B0B4BB;
+            border-bottom: #B0B4BB solid 2px;
+            font-size: 12px;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .process .complete {
+            color: #25B06B;
+            border-bottom: #25B06B solid 2px;
+        }
+
+        .process .current {
+            color: red;
+            border-bottom: red solid 2px;
+        }
+
+        .order {
+            position: relative;
+            width: 1000px;
+            min-height: 560px;
+            margin: 10px auto 0 auto;
+            border: #eee solid 1px;
+        }
+
+        .order .seat-view {
+            position: relative;
+            width: 690px;
+            display: inline-block;
+            padding: 10px 0;
+            margin-left: 1px;
+            overflow-x: scroll;
+            overflow-y: hidden;
+            white-space: nowrap;
+        }
+
+        .order .detail {
+            position: absolute;
+            width: 280px;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background: #FFF3F2;
+            padding: 20px 15px;
+        }
+
+        .seat-select {
+            margin: 20px 0 20px 55px;
+        }
+
+        .seat-select li {
+            height: 30px;
+            position: relative;
+            vertical-align: middle;
+        }
+
+        .seat-index {
+            position: absolute;
+            top: 90px;
+            left: 20px;
+        }
+
+        .seat-index li {
+            height: 30px;
+            vertical-align: middle;
+        }
+
+        .seat-index label {
+            display: inline-block;
+            background: #808695;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-right: 30px;
+            vertical-align: middle;
+        }
+
+        .seat-select a {
+            position: absolute;
+            display: inline-block;
+            width: 26px;
+            height: 26px;
+            top: 0;
+            cursor: pointer;
+            background: url('//img.alicdn.com/tps/i1/TB1HkvNGXXXXXbdXXXX1T7iZpXX-580-60.png') -16px -32px;
+        }
+
+        .seat-select .selected {
+            background: url('//img.alicdn.com/tps/i3/TB1uMz4GXXXXXaxXpXXMUBxFVXX-26-25.png') center center no-repeat;
+        }
+
+        .detail-list {
+            clear: both;
+        }
+
+        .detail-list li {
+            padding: 8px 0;
+        }
+
+        .detail-list-seat {
+            display: inline-block;
+            width: 235px;
+        }
+
+        .detail-list-seat a {
+            display: inline-block;
+            color: red;
+            border: red solid 1px;
+            background: white;
+            font-size: 13px;
+            padding: 5px;
+            margin: 0 10px 10px 0;
+        }
+    </style>
+</head>
+<body>
+<div id="w-content">
+    <div class="process">
+        <ul>
+            <li class="complete">1.选择影片、场次</li>
+            <li class="current">2.选座，填手机号</li>
+            <li>3.确认订单，支付</li>
+            <li>4.支付成功，影院取票观影</li>
+        </ul>
+    </div>
+    <div class="order">
+        <ul class="seat-index" style="z-index: 999;width: 25px">
+            <li th:each="index:${#numbers.sequence(1,9)}"><label th:text="${index}"></label></li>
+        </ul>
+        <div class="seat-view">
+            <div style="position: absolute;left: 238px;">
+                <div style="width: 600px;height: 30px;background: url('//img.alicdn.com/tps/i1/T14BRUFopcXXcv7RMm-580-60.png') no-repeat"></div>
+                <div style="text-align: center;font-size: 14px;color: #555;margin: 10px 0;">
+                    杭州中影国际影城（星光大道二期店） 【二期】　10号VIP 银幕
+                </div>
+            </div>
+            <div style="height: 60px;"></div>
+            <ul class="seat-select">
+                <li th:each="row:${#numbers.sequence(0,8)}">
+                    <a th:style="'left:'+${col*50+10}+'px;'" style="left: 10px"
+                       th:each="col:${#numbers.sequence(0,16)}" th:attr="data-index=${row+'-'+col}"></a>
+                    <div style="position: absolute;left: 840px;width:50px;display: inline-block;height: 1px;"></div>
+                </li>
+            </ul>
+        </div>
+        <div class="detail">
+            <input type="hidden" name="userId" th:value="${userId}">
+            <input type="hidden" name="id" th:value="${arrange.id}">
+            <input type="hidden" name="price" th:value="${arrange.discountPrice}">
+            <div>
+                <img style="float: left;margin: 0 10px 20px 0;width: 85px;height: 120px;"
+                     th:src="'http://localhost:8010/bed/search?film_id='+${arrange.cinemaFilm.film.id}">
+                <p style="font-size: 13px;font-weight: bold;color: #515A6E;margin: 5px 0;"
+                   th:text="${arrange.cinemaFilm.film.name}"></p>
+                <p style="font-size: 13px;color: #777;margin: 5px 0;">版本： <span
+                        th:text="${arrange.cinemaFilm.film.language}"></span> 3D</p>
+                <p style="font-size: 13px;color: #777;margin: 5px 0;">片长： <span
+                        th:text="${arrange.cinemaFilm.film.time}"></span>分钟</p>
+            </div>
+            <ul class="detail-list">
+                <li>
+                    <span style="color: #808695;font-size: 12px">影院：</span>
+                    <span style="color: #515A6E;font-weight: bold;font-size: 14px"
+                          th:text="${arrange.cinemaFilm.cinema.name}"></span>
+                </li>
+                <li>
+                    <span style="color: #808695;font-size: 12px">影厅：</span>
+                    <span style="color: #515A6E;font-weight: bold;font-size: 14px"
+                          th:text="${arrange.room.name}"></span>
+                </li>
+                <li>
+                    <span style="color: #808695;font-size: 12px">场次：</span>
+                    <span style="color: red;font-weight: bold;font-size: 14px"
+                          th:text="${#dates.format(arrange.time,'MM月dd日')}+'('+${dayForWeek}+') '+${#dates.format(arrange.time,'HH:mm')}"></span>
+                </li>
+                <li>
+                    <span style="display: inline-block;color: #808695;font-size: 12px;vertical-align: top">座位：</span>
+                    <div class="detail-list-seat">
+                    </div>
+                </li>
+                <li style="padding: 0 0 10px 40px;clear: both;font-size: 12px;">
+                    <span>已选择 <span style="color: red;font-size: 15px;font-weight: bold;" class="seat-num">0</span> 个座位</span>
+                </li>
+                <li style="border-top: #ccc solid 1px">
+                    <span style="color: #808695;font-size: 12px">原价：</span>
+                    <span style="color: #808695;font-size: 12px;font-weight: bold" class="price"
+                          th:text="'¥ '+${arrange.discountPrice}+' x 0'"></span>
+                </li>
+                <li style="border-bottom: #ccc solid 1px">
+                    <span style="color: #808695;font-size: 12px">总计：</span>
+                    <span style="color: red;font-size: 12px;font-weight: bold">¥ <span
+                            class="price-count"></span>0</span>
+                </li>
+                <li style="padding: 20px 0">
+                    <a style="font-size: 14px;color: white;background: red;padding: 10px 20px;cursor: pointer;"
+                       class="submit">确认信息，下单</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout(title,content)">
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="${title}">Title</title>
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2559139_4is7rh30ljl.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/sub.css">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="/js/sub.js"></script>
+    <script src="/js/handle.js"></script>
+    <script>
+        $(window).ready(() => {
+            $('#bodyer').css('transition', '');
+        });
+    </script>
+</head>
+<body>
+<div id="header">
+    <div style="margin: 0 20px;font-size: 22px;float: left;color: white;">
+        <i class="iconfont icon-iosanalytics" style="font-size: 30px;"></i> 系统管理面板
+    </div>
+</div>
+<div id="bodyer" style="transition: none;">
+    <div id="select">
+        <ul class="menu">
+            <li class="menu-item" th:each="menu : ${menus}" th:classappend="${(menu.path==path)?'selected':''}">
+                <a th:href="@{/{role}/{path}(role=${role},path=${menu.path})}">
+                    <i class="iconfont" data-th-classappend="${menu.icon}"></i>
+                    <span th:text="${menu.name}"></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div id="content" th:replace="${content}">
+    </div>
+</div>
+</body>
+</html>

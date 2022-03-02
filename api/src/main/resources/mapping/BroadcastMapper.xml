@@ -1,0 +1,28 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cwc.api.mapper.BroadcastMapper">
+    <insert id="insert">
+        INSERT INTO broadcast(film_id, url, is_main_page, `type`)
+        <foreach collection="broadcasts" item="broadcast" separator=",">
+            VALUES (#{broadcast.filmId}, #{broadcast.url}, #{broadcast.isMainPage}, #{broadcast.type})
+        </foreach>
+    </insert>
+
+    <update id="update">
+        UPDATE broadcast
+        <set>
+            <if test="filmId!=null">film_id=#{filmId},</if>
+            <if test="url!=null">url=#{url},</if>
+            <if test="isMainPage!=null">is_main_page=#{isMainPage},</if>
+            <if test="type!=null">`type`=#{type}</if>
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <delete id="delete">
+        DELETE
+        FROM broadcast
+        WHERE id = #{broadcastId}
+    </delete>
+</mapper>

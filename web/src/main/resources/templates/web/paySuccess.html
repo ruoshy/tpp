@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/web_frame::layout(~{::title},~{::style},~{::#w-content})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .process {
+            clear: both;
+            width: 1000px;
+            margin: 20px auto 0 auto;
+        }
+
+        .process ul {
+            display: flex;
+        }
+
+        .process li {
+            flex: 1;
+            display: inline-block;
+            color: #B0B4BB;
+            border-bottom: #B0B4BB solid 2px;
+            font-size: 12px;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .process .complete {
+            color: #25B06B;
+            border-bottom: #25B06B solid 2px;
+        }
+
+        .process .current {
+            color: red;
+            border-bottom: red solid 2px;
+        }
+    </style>
+</head>
+<body>
+<div id="w-content">
+    <div class="process">
+        <ul>
+            <li class="complete">1.选择影片、场次</li>
+            <li class="complete">2.选座，填手机号</li>
+            <li class="complete">3.确认订单，支付</li>
+            <li class="complete">4.支付成功，影院取票观影</li>
+        </ul>
+    </div>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+    <script th:inline="javascript">
+        $(function () {
+            $('#qrcode').qrcode('/snapshot?orderId=' + [[${order.id}]])
+        })
+    </script>
+    <div style="width: 1000px;margin: 0 auto;text-align: center" th:if="${order.id!=null}">
+        <div style="width: 100%;padding-top: 50px;">
+            <img src="/img/success.png" style="width: 100px;">
+            <h1>支付成功</h1>
+        </div>
+        <div id="qrcode"></div>
+        <div style="margin-top: 20px;">
+            <span style="color: #808695">取票号：</span>
+            <span th:text="${order.id}"></span>
+        </div>
+        <div style="margin-top: 20px;">
+            <span style="color: #808695">下单时间：</span>
+            <span th:text="${#dates.format(order.time,'yyyy-MM-dd HH:mm:ss')}"></span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

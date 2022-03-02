@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/frame::layout(~{::title},~{::#content})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="content">
+    <div class="panel card">
+        <form th:action="@{/cinema/film}" class="whole" style="color: #515A6E;">
+            <input type="text" name="name" class="input" placeholder="请输入影片名称" style="width: 200px;"
+                   autocomplete="off"/>
+            <label><input type="checkbox" name="select" value="1" autocomplete="off"/>已选</label>
+            <button type="submit" class="btn btn-primary">搜索</button>
+        </form>
+        <!--        -->
+        <div th:replace="~{common/assembly::table(colgroup=~{::colgroup},headers=${headers},body=~{::.body})}">
+            <colgroup>
+                <col width="50"/>
+                <col width="150"/>
+                <col width="100"/>
+                <col width="150"/>
+                <col width="80"/>
+                <col width="80"/>
+                <col width="80"/>
+                <col width="80"/>
+                <col width="200"/>
+                <col width="200"/>
+                <col width="100"/>
+            </colgroup>
+            <tbody class="body">
+            <!--/*@thymesVar id="film" type="cn.cwc.web.entity.Film"*/-->
+            <tr class="table-row" th:each="film,stat:${filmList}">
+                <td>
+                    <div class="table-cell">
+                        <span th:text="${stat.index+1}"></span>
+                        <input type="hidden" name="id" th:value="${film.id}">
+                        <input type="hidden" name="status" th:value="${film.status}">
+                    </div>
+                </td>
+                <td>
+                    <div class="table-cell"><span th:text="${film.name}"></span></div>
+                </td>
+                <td>
+                    <div class="table-cell">
+                        <span th:text="${film.director}"></span></div>
+                </td>
+                <td>
+                    <div class="table-cell"><span th:text="${film.actor}"></span></div>
+                </td>
+                <td>
+                    <div class="table-cell"><span th:text="${film.type}"></span></div>
+                </td>
+                <td>
+                    <div class="table-cell"><span th:text="${film.makeArea}"></span></div>
+                </td>
+                <td>
+                    <div class="table-cell"><span th:text="${film.language}"></span></div>
+                </td>
+                <td>
+                    <div class="table-cell"><span th:text="${film.time}"></span></div>
+                </td>
+                <td>
+                    <div class="table-cell"><span th:text="${film.introduce}"></span></div>
+                </td>
+                <td>
+                    <div class="table-cell"><span
+                            th:text="${#dates.format(film.releaseDate,'yyyy-MM-dd HH:mm')}"></span></div>
+                </td>
+                <td style="text-align: center">
+                    <div class="table-cell">
+                        <input type="button" class="btn btn-primary" th:onclick="|filmSelect(${stat.index})|"
+                               value="选择"
+                               th:style="${select?'display:none':''}">
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </div>
+        <div th:replace="~{common/assembly::page(pageInfo=${pageInfo},url='/admin/film')}">
+        </div>
+    </div>
+
+    <div class="modal-mask modal-film-select" style="display: none;">
+        <div class="modal" style="width: 650px;height: 300px">
+            <div class="modal-content">
+                <div class="modal-header">选择</div>
+                <div class="modal-body">
+                    <input type="hidden" name="id">
+                    <ul style="margin: 0;padding: 0;list-style: none;">
+                        <li style="margin-bottom: 10px">
+                            <label>
+                                <span style="display: inline-block;width: 100px;vertical-align: top;">影片名称：</span>
+                                <input type="text" name="name" class="input" style="width: 150px" autocomplete="off">
+                            </label>
+                            <label style="margin-left: 50px;">
+                                <span style="display: inline-block;width: 100px;vertical-align: top;">导演：</span>
+                                <input type="text" name="director" class="input" style="width: 150px"
+                                       autocomplete="off">
+                            </label>
+                        </li>
+                        <li style="margin-bottom: 10px">
+                            <span style="display: inline-block;width: 100px;vertical-align: top;">主演：</span>
+                            <input type="text" name="actor" class="input" style="width: 475px;" autocomplete="off">
+                        </li>
+                        <li style="margin-bottom: 10px">
+                            <label>
+                                <span style="display: inline-block;width: 100px;vertical-align: top;">类型：</span>
+                                <input type="text" name="type" class="input" style="width: 150px;" autocomplete="off">
+                            </label>
+                            <label style="margin-left: 50px;">
+                                <span style="display: inline-block;width: 100px;vertical-align: top;">地区：</span>
+                                <input type="text" name="makeArea" class="input" style="width: 150px;"
+                                       autocomplete="off">
+                            </label>
+                        </li>
+                        <li style="margin-bottom: 10px">
+                            <label>
+                                <span style="display: inline-block;width: 100px;vertical-align: top;">语言：</span>
+                                <input type="text" name="language" class="input" style="width: 150px;"
+                                       autocomplete="off">
+                            </label>
+                            <label style="margin-left: 50px;">
+                                <span style="display: inline-block;width: 100px;vertical-align: top;">时长：</span>
+                                <input type="text" name="time" class="input" style="width: 150px;" autocomplete="off">
+                            </label>
+                        </li>
+                        <li style="margin-bottom: 10px">
+                            <span style="display: inline-block;width: 100px;vertical-align: top;">介绍：</span>
+                            <textarea type="text" name="introduce" class="input"
+                                      style="max-width: 475px;height: 72px;"></textarea>
+                        </li>
+                        <li style="margin-bottom: 10px">
+                            <span style="display: inline-block;width: 100px;vertical-align: top;">上映日期：</span>
+                            <input type="datetime-local" name="releaseDate" class="input" style="width: 250px;"
+                                   autocomplete="off">
+                        </li>
+                        <li style="margin-bottom: 10px">
+                            <span style="display: inline-block;width: 100px;vertical-align: top;">状态：</span>
+                            <input type="checkbox" name="status" value="0" class="input"
+                                   style="width: 20px;cursor: pointer"
+                                   autocomplete="off">
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="submitFilmSelect()">选择
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

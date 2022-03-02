@@ -1,0 +1,57 @@
+html, body {
+    margin: 0;
+    height: 100%;
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+}
+
+input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+    color: #B9BDC4;
+    font-size: 14px;
+}
+
+.whole {
+    word-spacing: 5px;
+    padding: 0 0 20px 0;
+}
+
+#header {
+    float: left;
+    width: 100%;
+    line-height: 60px;
+    padding: 0;
+    background: #468DE9;
+}
+
+#bodyer {
+    position: absolute;
+    display: flex;
+    min-height: 100%;
+    left: 0;
+    right: 0;
+}
+
+#select {
+    margin-top: 64px;
+    width: 200px;
+}
+
+#content {
+    margin-top: 64px;
+    background: #F2F5F8;
+    flex: 1;
+    min-height: 100%;
+    position: relative;
+}
+
+.panel {
+    margin: 10px;
+    /*position: absolute;*/
+    /*top: 10px;*/
+    /*left: 10px;*/
+    /*right: 10px;*/
+    /*bottom: 10px;*/
+}
+
+.select .table-cell {
+
+}

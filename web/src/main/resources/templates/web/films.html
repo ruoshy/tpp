@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/web_frame::layout(~{::title},~{::style},~{::#w-content})}">
+<head>
+    <meta charset="UTF-8">
+    <title>影片</title>
+    <style>
+        .received {
+            width: 1000px;
+            margin: 30px auto;
+        }
+
+        .received-title {
+            border-bottom: 1px solid #eee;
+        }
+
+        .received-title span {
+            font-size: 16px;
+            display: inline-block;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .received-content {
+            margin: 20px 0;
+        }
+
+        .received-content ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+
+        }
+
+        .received-content li {
+            margin-right: 20px;
+            margin-top: 20px;
+            display: inline-block;
+        }
+
+        .received-content li a {
+            display: inline-block;
+            font-size: 0;
+            color: white;
+            text-decoration: none;
+        }
+
+        .mask {
+            top: -20%;
+            opacity: 0;
+            padding: 21px 15px;
+            position: absolute;
+            background: rgba(0, 0, 0, .6);
+            transition: top .3s, opacity .3s;
+        }
+
+        .received-content .mask p {
+            color: white;
+            font-size: 12px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+        }
+
+        .received-content a:hover .mask {
+            top: 0;
+            opacity: 1;
+        }
+
+        .received-content a {
+            position: relative;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="w-content">
+    <div class="received">
+        <div class="received-content">
+            <ul style="width: 1000px;">
+                <li th:each="film:${films.list}">
+                    <a th:href="@{/filmDetail(id=${film.id})}">
+                        <div th:text="${film.name}"
+                             style="font-size: 12px;position: absolute;width: 100%;padding: 60px 0 10px 0;bottom: 30px;left: 0;text-align: center;color: white;background-image: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,.7));">
+                        </div>
+                        <div class="mask">
+                            <p th:text="'导演：'+${film.director}"></p>
+                            <p th:text="'主演：'+${film.actor}"></p>
+                            <p th:text="'类型：'+${film.type}"></p>
+                            <p th:text="'地区：'+${film.makeArea}"></p>
+                            <p th:text="'语言：'+${film.language}"></p>
+                            <p th:text="'片长：'+${film.time}+'分钟'"></p>
+                        </div>
+                        <img th:src="'http://localhost:8010/bed/search?film_id='+${film.id}"
+                             style="width: 160px;height: 227px;">
+                        <div style="text-align: center;background: red;font-size: 14px;padding: 5px 0;border: red solid 1px">
+                            选座购票
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <ul class="page"
+            th:if="${films!=null}"
+            th:with="current=${films.current},count=${films.count}">
+            <li class="page-item page-prev" style="padding: 0 5px"
+                th:if="${films.hasPreviousPage}">
+                <a th:href="'/films?page='+${page - 1}">上一页</a>
+            </li>
+            <li class="page-item page-next" style="padding: 0 5px"
+                th:if="${films.hasNextPage}">
+                <a th:href="'/films?page='+${page+1}">下一页</a>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

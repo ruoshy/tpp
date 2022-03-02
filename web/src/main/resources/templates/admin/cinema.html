@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/frame::layout(~{::title},~{::#content})}">
+<head>
+    <meta charset="UTF-8">
+    <title>影院</title>
+</head>
+<body>
+<div id="content">
+    <div class="panel card">
+        <form th:action="@{/admin/cinema}" class="whole">
+            <div th:replace="~{common/assembly::select(list=~{::#select-citys},style=${'width: 200px;'},placeholder=${'请选择城市'},name='city_id',value=${cityId},back='citySelected')}">
+                <ul id="select-citys" class="select-dropdown-list">
+                    <li class="select-item"
+                        th:classappend="${city.id==cityId?'select-selected':''}"
+                        th:each="city,stat : ${citys}"
+                        th:attr="value=${city.id}"
+                        th:text="${city.name}"></li>
+                </ul>
+            </div>
+            <div th:replace="~{common/assembly::select(list=~{::#select-regions},style=${'width: 200px;'},placeholder=${'请选择区域'},name='region_id',value=null,back=null)}">
+                <ul id="select-regions" class="select-dropdown-list">
+                    <li class="select-item"
+                        th:classappend="${region.id==regionId?'select-selected':''}"
+                        th:each="region,stat : ${regions}"
+                        th:attr="value=${region.id}"
+                        th:text="${region.name}"></li>
+                </ul>
+            </div>
+            <button type="submit" class="btn btn-primary">搜索</button>
+            <button type="button" class="btn btn-primary" style="float: right;" onclick="cinemaAdd()">添加</button>
+        </form>
+        <div th:replace="~{common/assembly::table(colgroup=null,headers=${headers},body=~{::.body})}">
+            <tbody class="body">
+            <!--/*@thymesVar id="cinema" type="cn.cwc.web.entity.Cinema"*/-->
+            <tr class="table-row" th:each="cinema,stat:${cinemaList}">
+                <td>
+                    <div class="table-cell">
+                        <span th:text="${cinema.name}"></span>
+                    </div>
+                </td>
+                <td>
+                    <div class="table-cell">
+                        <span th:text="${cinema.address}"></span>
+                    </div>
+                </td>
+                <td>
+                    <div class="table-cell">
+                        <span th:text="${cinema.phone}"></span>
+                    </div>
+                </td>
+                <td>
+                    <div class="table-cell">
+                        <span th:text="${cinema.lal}"></span>
+                    </div>
+                </td>
+                <td style="text-align: center">
+                    <div class="table-cell">
+                        <button type="button" class="btn btn-primary"
+                                th:onclick="|cinemaEdit(${cinema.id},${stat.index})|">编辑
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </div>
+        <div th:replace="~{common/assembly::page(pageInfo=${pageInfo},url='/admin/cinema')}">
+        </div>
+    </div>
+    <!--Edit-->
+    <div class="modal-mask modal-cinema-edit" style="display: none;">
+        <div class="modal" style="width: 500px;height: 300px">
+            <div class="modal-content">
+                <div class="modal-header">编辑</div>
+                <div class="modal-body">
+                    <input type="hidden" name="id">
+                    <ul style="margin: 0;padding: 0;list-style: none;">
+                        <li style="margin-bottom: 10px">
+                            <span style="display: inline-block;width: 100px;vertical-align: top;">影院名称：</span>
+                            <input type="text" name="name" class="input" style="width: 300px">
+                        </li>
+                        <li style="margin-bottom: 10px">
+                            <span style="display: inline-block;width: 100px;vertical-align: top;">联系号码：</span>
+                            <input type="text" name="phone" class="input" style="width: 300px">
+                        </li>
+                        <li style="margin-bottom: 10px">
+                            <span style="display: inline-block;width: 100px;vertical-align: top;">经纬度：</span>
+                            <input type="text" name="lal" class="input" style="width: 300px;">
+                        </li>
+                        <li style="margin-bottom: 10px">
+                            <span style="display: inline-block;width: 100px;vertical-align: top;">详细地址：</span>
+                            <input type="text" name="address" class="input" style="width: 300px;height: 72px;">
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="submitCinemaEdit()">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Add-->
+    <div class="modal-mask modal-cinema-add" style="display: none;">
+        <div class="modal" style="width: 500px;height: 300px">
+            <div class="modal-content">
+                <div class="modal-header">添加</div>
+                <div class="modal-body">
+                    <ul style="margin: 0;padding: 0;list-style: none;">
+                        <li style="margin-bottom: 10px;">
+                            <span style="display: inline-block;width: 100px;vertical-align: top;">区域：</span>
+                            <div th:replace="~{common/assembly::select(list=~{::#select-citys},style=${'width: 100px;'},placeholder=${'请选择城市'},name='city_id',value=null,back='citySelected')}"></div>
+                            <div th:replace="~{common/assembly::select(list=~{::#select-regions},style=${'width: 100px;'},placeholder=${'请选择区域'},name='region_id',value=null,back=null)}"></div>
+                        </li>
+                        <li style="margin-bottom: 10px">
+                            <span style="display: inline-block;width: 100px;vertical-align: top;">影院名称：</span>
+                            <input type="text" name="name" class="input" style="width: 300px">
+                        </li>
+                        <li style="margin-bottom: 10px">
+                            <span style="display: inline-block;width: 100px;vertical-align: top;">联系号码：</span>
+                            <input type="text" name="phone" class="input" style="width: 300px">
+                        </li>
+                        <li style="margin-bottom: 10px">
+                            <span style="display: inline-block;width: 100px;vertical-align: top;">经纬度：</span>
+                            <input type="text" name="lal" class="input" style="width: 300px;">
+                        </li>
+                        <li style="margin-bottom: 10px">
+                            <span style="display: inline-block;width: 100px;vertical-align: top;">详细地址：</span>
+                            <input type="text" name="address" class="input" style="width: 300px;height: 72px;">
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="submitCinemaAdd()">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

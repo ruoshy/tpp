@@ -1,0 +1,93 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cwc.api.mapper.ArrangeMapper">
+    <select id="findById" parameterType="cn.cwc.api.entity.Arrange" resultMap="arrangeMap">
+        SELECT *,
+               film.name   film_name,
+               film.time   film_time,
+               cinema.name cinema_name,
+               room.name   room_name,
+               room.type   room_type
+        FROM arrange
+                 INNER JOIN cinema_film ON cinema_film.id = arrange.cinema_film_id
+                 INNER JOIN film ON cinema_film.film_id = film.id
+                 INNER JOIN cinema ON cinema_film.cinema_id = cinema.id
+                 INNER JOIN room ON arrange.room_id = room.id
+        WHERE arrange.id = #{arrangeId}
+    </select>
+
+    <select id="findByCinema" resultType="cn.cwc.api.entity.Arrange" parameterType="cn.cwc.api.entity.Cinema">
+        SELECT *
+        FROM arrange
+                 INNER JOIN cinema_film ON arrange.cinema_film_id = cinema_film.id
+        WHERE cinema_film.cinema_id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="cn.cwc.api.entity.Arrange">
+        INSERT INTO arrange(cinema_film_id, room_id, `time`, price, discount_price)
+        VALUES
+        <foreach collection="arranges" item="arrange" separator=",">
+            (#{arrange.cinemaFilmId},#{arrange.roomId},#{arrange.time},#{arrange.price},#{arrange.discountPrice})
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="cn.cwc.api.entity.Arrange">
+        UPDATE arrange
+        <set>
+            <if test="price!=null">price=#{price},</if>
+            <if test="discountPrice!=null">discount_price=#{discountPrice}</if>
+            <if test="time!=null">`time`=#{time}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="findAll" parameterType="cn.cwc.api.entity.Arrange" resultMap="arrangeMap">
+        SELECT *, room.name room_name, room.type room_type
+        FROM arrange
+                 INNER JOIN cinema_film ON arrange.cinema_film_id = cinema_film.id
+                 INNER JOIN room ON arrange.room_id = room.id
+        WHERE cinema_film.film_id = #{cinemaFilm.filmId}
+          AND cinema_film.cinema_id = #{cinemaFilm.cinemaId}
+          AND DATE (arrange.time) = DATE (#{time})
+    </select>
+    <resultMap id="arrangeMap" type="cn.cwc.api.entity.Arrange">
+        <id column="id" property="id"/>
+        <result column="time" property="time"/>
+        <result column="price" property="price"/>
+        <result column="discount_price" property="discountPrice"/>
+        <association property="room" javaType="cn.cwc.api.entity.Room" resultMap="roomMap"/>
+        <association property="cinemaFilm" javaType="cn.cwc.api.entity.CinemaFilm" resultMap="cinemaFilmMap"/>
+    </resultMap>
+
+    <resultMap id="cinemaFilmMap" type="cn.cwc.api.entity.CinemaFilm">
+        <association property="film" javaType="cn.cwc.api.entity.Film" resultMap="filmMap"/>
+        <association property="cinema" javaType="cn.cwc.api.entity.Cinema" resultMap="cinemaMap"/>
+    </resultMap>
+
+    <resultMap id="roomMap" type="cn.cwc.api.entity.Room">
+        <id column="room_id" property="id"/>
+        <result column="room_name" property="name"/>
+        <result column="seat" property="seat"/>
+        <result column="room_type" property="type"/>
+        <result column="detail" property="detail"/>
+    </resultMap>
+    <resultMap id="cinemaMap" type="cn.cwc.api.entity.Cinema">
+        <id column="cinema_id" property="id"/>
+        <result column="cinema_name" property="name"/>
+        <result column="address" property="address"/>
+    </resultMap>
+    <resultMap id="filmMap" type="cn.cwc.api.entity.Film">
+        <id column="film_id" property="id"/>
+        <result column="film_name" property="name"/>
+        <result column="film_time" property="time"/>
+        <result column="director" property="director"/>
+        <result column="actor" property="actor"/>
+        <result column="type" property="type"/>
+        <result column="make_area" property="makeArea"/>
+        <result column="language" property="language"/>
+        <result column="introduce" property="introduce"/>
+        <result column="release_date" property="releaseDate"/>
+        <result column="status" property="status"/>
+    </resultMap>
+</mapper>

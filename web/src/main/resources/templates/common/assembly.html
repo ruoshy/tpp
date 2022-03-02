@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--Select-->
+<div class="select" th:fragment="select(list,style,placeholder,name,back)" th:style="${style}">
+    <div class="select-selection" th:attr="back=${back==null?'':back}">
+        <input type="hidden" th:name="${name}">
+        <div>
+            <span class="select-selected-placeholder" th:text="${placeholder}"></span>
+            <span class="select-selected-value"></span>
+            <i class="iconfont icon-bottom select-arrow"></i>
+        </div>
+    </div>
+    <div class="select-dropdown" style="display: none;">
+        <ul th:replace="${list}">
+        </ul>
+    </div>
+</div>
+<!--Table-->
+<div class="table" th:fragment="table(colgroup,headers,body)">
+    <div class="table-header">
+        <table cellspacing="0" cellpadding="0" border="0"
+               style="width: 100%;">
+            <div th:remove="tag" th:if="${colgroup}!=null">
+                <colgroup th:replace="${colgroup}">
+                </colgroup>
+            </div>
+            <thead>
+            <tr>
+                <th th:each="header:${headers}">
+                    <div class="table-cell">
+                        <span th:text="${header}"></span>
+                    </div>
+                </th>
+            </tr>
+            </thead>
+            <tbody th:replace="${body}">
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--Page-->
+<!--/*@thymesVar id="pageInfo" type="cn.cwc.web.model.PageInfo"*/-->
+<ul class="page"
+    th:fragment="page(pageInfo,url)"
+    th:if="${pageInfo!=null}"
+    th:with="current=${pageInfo.current},count=${pageInfo.count}">
+    <li class="page-item page-prev" style="padding: 0 5px"
+        th:if="${current>1}">
+        <a th:href="@{{url}(url=${url},page=${current - 1})}">上一页</a>
+    </li>
+    <li class="page-item"
+        th:if="${current - 5>=0}">
+        <a th:href="@{{url}(url=${url})}">1</a>
+    </li>
+    <span th:if="${current - 5>=0}">...</span>
+    <li class="page-item"
+        th:each="i:${#numbers.sequence((current - 5<0?1:current), ((current+5)>count?count:current+5))}"
+        th:classappend="${current==i?'page-item-selected':''}">
+        <a th:text="${i}" th:href="@{{url}(url=${url},page=${i})}"></a>
+    </li>
+    <span th:if="${current<count - 5}">...</span>
+    <li class="page-item"
+        th:if="${current<count - 5}"
+        th:text="${count}" th:href="@{{url}(url=${url},page=${count})}"></li>
+    <li class="page-item page-next" style="padding: 0 5px"
+        th:if="${current<count}">
+        <a th:href="@{{url}(url=${url},page=${current+1})}">下一页</a>
+    </li>
+</ul>
+</body>
+</html>

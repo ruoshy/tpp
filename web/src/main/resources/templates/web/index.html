@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/web_frame::layout(~{::title},~{::style},~{::#w-content})}">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <style>
+        .banner {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .banner ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            height: 360px;
+        }
+
+        .banner li {
+            display: inline-block;
+            width: 100%;
+            position: absolute;
+        }
+
+        .banner li a {
+            display: block;
+            width: 100%;
+            height: 360px;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
+        .banner-move-left {
+            left: 10%;
+        }
+
+        .banner-move-right {
+            right: 10%;
+        }
+
+        .banner-move-left, .banner-move-right {
+            position: absolute;
+            background: #808695;
+            width: 50px;
+            height: 50px;
+            top: 50%;
+            margin-top: -25px;
+        }
+
+        .received {
+            width: 1000px;
+            margin: 30px auto;
+        }
+
+        .received-title {
+            border-bottom: 1px solid #eee;
+        }
+
+        .received-title span {
+            font-size: 16px;
+            display: inline-block;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .received-content {
+            margin: 20px 0;
+        }
+
+        .received-content ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .received-content li {
+            flex: 1;
+            display: inline-block;
+        }
+
+        .received-content li a {
+            display: inline-block;
+            font-size: 0;
+            color: white;
+            text-decoration: none;
+        }
+
+        .content-wrap {
+            display: flex;
+            margin: 0 auto;
+            width: 1000px;
+        }
+
+        .content-list {
+            flex: 1;
+        }
+
+        .content-list ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .content-list li {
+            width: 100%;
+            padding: 24px 0;
+            line-height: 22px;
+            border-bottom: #eee solid 1px;
+        }
+
+        .content-list-item {
+            display: inline-block;
+            font-size: 14px;
+            margin-left: 20px;
+            width: 80%;
+            position: relative;
+        }
+
+        .cinema .content-list-item span {
+            width: 90%;
+        }
+
+        .content-list .cinema .current .content-list-item span {
+            width: 70%;
+        }
+
+        .content-list .cinema .current .content-list-item .buynow {
+            display: block;
+        }
+
+        .cinema li {
+            padding: 12px 0;
+        }
+
+        .buynow {
+            position: absolute;
+            right: 0;
+            top: 0;
+            display: none;
+        }
+
+        .one-line {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+        }
+
+        .notice {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            cursor: pointer;
+        }
+
+        .notice li {
+            display: inline-block;
+            width: 49%;
+            position: relative;
+            border: none;
+            padding: 10px 0;
+        }
+
+        .notice img {
+            width: 140px;
+            height: 100px;
+        }
+
+        .notice .play {
+            width: 22px;
+            height: 22px;
+            position: absolute;
+            top: 85px;
+            left: 15px;
+        }
+
+        .mask {
+            top: -20%;
+            opacity: 0;
+            padding: 21px 15px;
+            position: absolute;
+            background: rgba(0, 0, 0, .6);
+            transition: top .3s, opacity .3s;
+        }
+
+        .received-content .mask p {
+            color: white;
+            font-size: 12px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+        }
+
+        .received-content a:hover .mask {
+            top: 0;
+            opacity: 1;
+        }
+
+        .received-content a {
+            position: relative;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div id="w-content">
+    <div class="banner">
+        <ul style="position:relative;">
+            <li style="left: 0;"><a
+                    style="background-image: url('//gw.alicdn.com/tfs/TB1GRxRfZLJ8KJjy0FnXXcFDpXa-1920-360.jpg')"></a>
+            </li>
+            <li style="left: 100%;"><a
+                    style=";background-image: url('//gw.alicdn.com/tfs/TB1GRxRfZLJ8KJjy0FnXXcFDpXa-1920-360.jpg')"></a>
+            </li>
+            <li style="left: 200%;"><a
+                    style="background-image: url('//gw.alicdn.com/tfs/TB1GRxRfZLJ8KJjy0FnXXcFDpXa-1920-360.jpg')"></a>
+            </li>
+        </ul>
+        <div class="banner-move-left">
+        </div>
+        <div class="banner-move-right">
+        </div>
+    </div>
+    <div class="received">
+        <div class="received-title">
+            <span style="border-bottom: 2px solid red">正在热映</span>
+            <span style="color: #808695">即将上映</span>
+        </div>
+        <div class="received-content">
+            <ul>
+                <li th:each="film:${hotInfo.list}">
+                    <a th:href="@{/filmDetail(id=${film.id})}">
+                        <div th:text="${film.name}"
+                             style="font-size: 12px;position: absolute;width: 100%;padding: 60px 0 10px 0;bottom: 30px;left: 0;text-align: center;color: white;background-image: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,.7));">
+                        </div>
+                        <div class="mask">
+                            <p th:text="'导演：'+${film.director}"></p>
+                            <p th:text="'主演：'+${film.actor}"></p>
+                            <p th:text="'类型：'+${film.type}"></p>
+                            <p th:text="'地区：'+${film.makeArea}"></p>
+                            <p th:text="'语言：'+${film.language}"></p>
+                            <p th:text="'片长：'+${film.time}+'分钟'"></p>
+                        </div>
+                        <img th:src="'http://localhost:8010/bed/search?film_id='+${film.id}"
+                             style="width: 160px;height: 227px;">
+                        <div style="text-align: center;background: red;font-size: 14px;padding: 5px 0;border: red solid 1px">
+                            选座购票
+                        </div>
+                    </a>
+                </li>
+            </ul>
+            <ul style="display: none">
+                <li th:each="film:${comingSoonInfo.list}">
+                    <a>
+                        <div th:text="${film.name}"
+                             style="font-size: 12px;position: absolute;width: 100%;padding: 60px 0 10px 0;bottom: 30px;left: 0;text-align: center;color: white;background-image: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,.7));">
+                        </div>
+                        <div class="mask">
+                            <p th:text="'导演：'+${film.director}"></p>
+                            <p th:text="'主演：'+${film.actor}"></p>
+                            <p th:text="'类型：'+${film.type}"></p>
+                            <p th:text="'地区：'+${film.makeArea}"></p>
+                            <p th:text="'语言：'+${film.language}"></p>
+                            <p th:text="'片长：'+${film.time}+'分钟'"></p>
+                        </div>
+                        <img th:src="'http://localhost:8010/bed/search?film_id='+${film.id}"
+                             style="width: 160px;height: 227px;">
+                        <div style="text-align: center;background: white;font-size: 14px;padding: 5px 0;color: #808695;border: #eee solid 1px"
+                             th:text="'上映时间'+${#dates.format(film.releaseDate,'yyyy-MM-dd')}"></div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div style="margin-bottom: 30px;height: 88px;width: 100%;background: url('//img.alicdn.com/tps/i2/TB1Qf3_FVXXXXacXFXXnZ6pJVXX-990-88.png') center center no-repeat #f4f4f4;"></div>
+    <div class="content-wrap">
+        <div class="content-list">
+            <div style="border-bottom: #eee solid 1px;padding: 10px 0;line-height: 20px">
+                <span style="font-weight: bold;font-size: 18px">上周票房排行</span>
+                <a href="/films" style="color: red;float: right;font-size: 12px;">全部影片></a>
+            </div>
+            <ul class="film">
+                <li th:each="film,stat:${hotInfo.list}">
+                    <span th:text="${stat.index+1}"
+                          style="margin-top: 3px;float: left;background: red;color: white;font-size: 3px;height: 15px;width: 15px;line-height: 15px;text-align: center"></span>
+                    <div class="content-list-item" th:style="${(stat.index+1)==1?'display: none':''}">
+                        <span style="float: left;" th:text="${film.name}"></span>
+                        <span style="float: right">7.5</span>
+                    </div>
+                    <div class="content-list-item" th:style="${(stat.index+1)==1?'':'display: none'}">
+                        <div style="float: left;margin-right: 20px">
+                            <img th:src="'http://localhost:8010/bed/search?film_id='+${film.id}"
+                                 style="width: 120px;height: 80px;"/>
+                        </div>
+                        <div style="float: left;font-size: 12px">
+                            <span th:text="${film.name}"></span>
+                            <br>
+                            <span>7.5</span>
+                        </div>
+                        <a th:href="@{/filmDetail(id=${film.id})}"
+                           style="float: left;padding: 5px 10px;background: red;color: white;text-decoration: none;">选座购票</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="content-list" style="padding: 0 30px;">
+            <div style="border-bottom: #eee solid 1px;padding: 10px 0;line-height: 20px">
+                <span style="font-weight: bold;font-size: 18px">热门影院排行</span>
+<!--                <span style="color: red;float: right;font-size: 12px;">全部影院></span>-->
+            </div>
+            <ul class="cinema">
+                <li class="current" th:each="cinema,stat:${hotCinemaInfo.list}">
+                    <span th:text="${stat.index+1}"
+                          style="margin-top: 3px;float: left;background: red;color: white;font-size: 3px;height: 15px;width: 15px;line-height: 15px;text-align: center"></span>
+                    <div class="content-list-item">
+                        <span class="one-line" th:text="${cinema.name}"></span>
+                        <span style="font-size: 12px;color: #808695;" class="one-line"
+                              th:text="${cinema.address}"></span>
+                        <div class="buynow" th:style="${(stat.index+1)==1?'':'display: none'}">
+                            <a style="float: right;background: red;color: white;padding: 5px 10px;">选座</a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="content-list">
+            <div style="border-bottom: #eee solid 1px;padding: 10px 0;line-height: 20px">
+                <span style="font-weight: bold;font-size: 18px">热门预告片</span>
+            </div>
+            <ul class="notice">
+                <li th:each="film:${hotInfo.list}">
+                    <img th:src="'http://localhost:8010/bed/search?film_id='+${film.id}"
+                         style="width: 140px;height: 100px;">
+                    <img class="play" src="https://img.alicdn.com/tps/i2/T1IKtlFfpgXXbKu7Ha-22-22.png">
+                    <p style="margin: 0;font-size: 12px;text-align: left;" th:text="${film.name}"></p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/frame::layout(~{::title},~{::#content})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="content">
+    <div class="panel card">
+        <div class="whole">
+            <span style="color: #808695">
+                2021年
+            </span>
+            <div th:replace="~{common/assembly::select(list=~{::#select-citys},style=${'width: 100px;'},placeholder=${'请选择月份'},name='month',value=${'1'},back='citySelected')}">
+                <ul id="select-citys" class="select-dropdown-list">
+                    <li class="select-item"
+                        th:classappend="${index==month?'select-selected':''}"
+                        th:each="index : ${#numbers.sequence(1,12)}"
+                        th:text="${index}+'月'"></li>
+                </ul>
+            </div>
+
+            <button type="button" class="btn btn-primary" style="float: right;" onclick="filmAdd()">添加</button>
+        </div>
+        <div style="display: flex" class="arrange">
+            <div style="flex: 1;">
+                <div th:replace="~{common/assembly::table(colgroup=~{::.film-col},headers=${film_headers},body=~{::.film-body})}">
+                    <colgroup class="film-col">
+                        <col width="20%"/>
+                        <col width="80%"/>
+                    </colgroup>
+                    <tbody class="film-body">
+                    <tr class="table-row" th:each="film,stat:${filmList}">
+                        <td>
+                            <div class="table-cell">
+                                <span th:text="${stat.index+1}"></span>
+                                <input type="hidden" name="id" th:value="${film.id}">
+                                <input type="hidden" name="status" th:value="${film.status}">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="table-cell"><span th:text="${film.name}"></span></div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </div>
+            </div>
+            <div style="flex: 3;margin-left: 10px">
+                <div th:replace="~{common/assembly::table(colgroup=~{::.arrange-col},headers=${arrange_headers},body=~{::.arrange-body})}">
+                    <colgroup class="arrange-col">
+                        <col width="10%"/>
+                        <col width="30%"/>
+                        <col width="20%"/>
+                        <col width="20%"/>
+                        <col width="20%"/>
+                    </colgroup>
+                    <tbody class="arrange-body">
+                    <!--/*@thymesVar id="film" type="cn.cwc.web.entity.Film"*/-->
+                    <!--            <tr class="table-row" th:each="film,stat:${filmList}">-->
+                    <!--                <td>-->
+                    <!--                    <div class="table-cell">-->
+                    <!--                        <span th:text="${stat.index+1}"></span>-->
+                    <!--                        <input type="hidden" name="id" th:value="${film.id}">-->
+                    <!--                        <input type="hidden" name="status" th:value="${film.status}">-->
+                    <!--                    </div>-->
+                    <!--                </td>-->
+                    <!--                <td>-->
+                    <!--                    <div class="table-cell"><span th:text="${film.name}"></span></div>-->
+                    <!--                </td>-->
+                    <!--                <td>-->
+                    <!--                    <div class="table-cell">-->
+                    <!--                        <span th:text="${film.director}"></span></div>-->
+                    <!--                </td>-->
+                    <!--                <td>-->
+                    <!--                    <div class="table-cell"><span th:text="${film.actor}"></span></div>-->
+                    <!--                </td>-->
+                    <!--                <td>-->
+                    <!--                    <div class="table-cell"><span th:text="${film.type}"></span></div>-->
+                    <!--                </td>-->
+                    <!--                <td>-->
+                    <!--                    <div class="table-cell"><span th:text="${film.makeArea}"></span></div>-->
+                    <!--                </td>-->
+                    <!--                <td>-->
+                    <!--                    <div class="table-cell"><span th:text="${film.language}"></span></div>-->
+                    <!--                </td>-->
+                    <!--                <td>-->
+                    <!--                    <div class="table-cell"><span th:text="${film.time}"></span></div>-->
+                    <!--                </td>-->
+                    <!--                <td>-->
+                    <!--                    <div class="table-cell"><span th:text="${film.introduce}"></span></div>-->
+                    <!--                </td>-->
+                    <!--                <td>-->
+                    <!--                    <div class="table-cell"><span-->
+                    <!--                            th:text="${#dates.format(film.releaseDate,'yyyy-MM-dd HH:mm')}"></span></div>-->
+                    <!--                </td>-->
+                    <!--                <td style="text-align: center">-->
+                    <!--                    <div class="table-cell">-->
+                    <!--                        <input type="button" class="btn btn-primary" th:onclick="|filmSelect(${stat.index})|"-->
+                    <!--                               value="选择"-->
+                    <!--                               th:style="${select?'display:none':''}">-->
+                    <!--                    </div>-->
+                    <!--                </td>-->
+                    <!--            </tr>-->
+                    </tbody>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

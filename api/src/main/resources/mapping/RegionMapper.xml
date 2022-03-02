@@ -1,0 +1,17 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cwc.api.mapper.RegionMapper">
+    <insert id="insert">
+        INSERT INTO region(`name`,city_id) VALUES
+        <foreach collection="regions" item="region" separator=",">
+            (#{region.name},#{region.cityId})
+        </foreach>
+    </insert>
+
+    <update id="update">
+        UPDATE region
+        SET `name`=#{name}
+        WHERE id = #{id}
+    </update>
+</mapper>

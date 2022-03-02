@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/web_frame::layout(~{::title},~{::style},~{::#w-content})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .process {
+            clear: both;
+            width: 1000px;
+            margin: 20px auto 0 auto;
+        }
+
+        .process ul {
+            display: flex;
+        }
+
+        .process li {
+            flex: 1;
+            display: inline-block;
+            color: #B0B4BB;
+            border-bottom: #B0B4BB solid 2px;
+            font-size: 12px;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .process .complete {
+            color: #25B06B;
+            border-bottom: #25B06B solid 2px;
+        }
+
+        .process .current {
+            color: red;
+            border-bottom: red solid 2px;
+        }
+    </style>
+</head>
+<body>
+<div id="w-content">
+    <div class="process">
+        <ul>
+            <li class="complete">1.选择影片、场次</li>
+            <li class="complete">2.选座，填手机号</li>
+            <li class="current">3.确认订单，支付</li>
+            <li>4.支付成功，影院取票观影</li>
+        </ul>
+    </div>
+    <div style="width: 1000px;margin: 20px auto 0 auto" class="order-info">
+        <div style="padding: 35px 30px;color: red;font-size: 14px;font-weight: bold;background: #FFEFF0">
+            请您确认您的订单信息，并请在15分钟内完成付款，如超时系统将自动释放已选座位。
+        </div>
+        <p style="color: #515A6E;font-size: 13px" th:text="'订单号：'+${order.id}"></p>
+        <input type="hidden" name="orderId" th:value="${order.id}">
+        <div class="table" th:fragment="table(colgroup,headers,body)">
+            <div class="table-header">
+                <table cellspacing="0" cellpadding="0" border="0" style="width: 100%;">
+                    <col width="30%">
+                    <col width="20%">
+                    <col width="10%">
+                    <col width="15%">
+                    <col width="25%">
+                    <thead>
+                    <tr>
+                        <th>
+                            <div class="table-cell">
+                                <span>电影</span>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="table-cell">
+                                <span>场次</span>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="table-cell">
+                                <span>票数/座位</span>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="table-cell">
+                                <span>金额小计</span>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="table-cell">
+                                <span>接收电子码的电话号码</span>
+                            </div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody class="body" style="color: #808695">
+                    <tr class="table-row">
+                        <td>
+                            <div class="table-cell" th:object="${arrange.cinemaFilm.film}">
+                                <img style="float: left;margin: 0 10px 20px 0;width: 85px;height: 120px"
+                                     th:src="'http://localhost:8010/bed/search?film_id='+*{id}">
+                                <span style="font-weight: bold;font-size: 13px;" th:text="*{name}"></span>
+                                <span style="color: #808695;font-size: 13px;" th:text="'版本：'+*{language}"></span>
+                                <span style="color: #808695;font-size: 13px;" th:text="'片长：'+*{time}+'分钟'"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="table-cell">
+                                <p th:text="${arrange.cinemaFilm.cinema.name}"></p>
+                                <p th:text="${arrange.room.name}"></p>
+                                <p style="color: red"
+                                   th:text="${#dates.format(arrange.time,'MM月dd日')}+'('+${dayForWeek}+') '+${#dates.format(arrange.time,'HH:mm')}">
+                                    6月2日 (周三) 10:30</p>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="table-cell">
+                                <p style="text-align: center" th:text="${order.seats.size()}+'张'"></p>
+                                <ul>
+                                    <li style="margin-bottom: 10px" th:each="seat:${order.seats}">
+                                        <a style="border: #999 solid 1px;color: #999;padding: 5px 0;display: block;font-size: 12px;text-align: center"
+                                           th:text="${seat.row+1}+'排'+${seat.col+1}+'座'"></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="table-cell">
+                                <span style="font-size: 20px;color: red;font-weight: bold;"
+                                      th:text="'￥'+${order.money}"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="table-cell">
+                                <p style="font-size: 12px;">1.短信可能会被手机软件拦截，请到该软件中查找短信</p>
+                                <p style="font-size: 12px;">2.若要修改手机号，需要您重新下单</p>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div style="text-align: right">
+            <p style="color: #515A6E">实付款：<span style="color: red;font-weight: bold;font-size: 20px"
+                                                th:text="'¥'+${order.money}"></span></p>
+            <a href="#" style="padding: 10px 30px;color: white;background: red" class="submit">确认订单，立即支付</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

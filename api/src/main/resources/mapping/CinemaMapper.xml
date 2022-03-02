@@ -1,0 +1,46 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cwc.api.mapper.CinemaMapper">
+    <select id="findByRegion" parameterType="cn.cwc.api.entity.Region" resultType="cn.cwc.api.entity.Cinema">
+        SELECT *
+        FROM cinema
+        INNER JOIN region ON cinema.region_id = region.id
+        INNER JOIN city ON region.city_id = city.id
+        WHERE
+        <choose>
+            <when test="id!=null">
+                region.id = #{id}
+            </when>
+            <when test="cityId!=null">
+                city.id = #{cityId}
+            </when>
+            <otherwise>
+                1=1
+            </otherwise>
+        </choose>
+    </select>
+    <insert id="insert" parameterType="cn.cwc.api.entity.Cinema">
+        INSERT INTO cinema(`name`, address, phone, region_id, lal)
+        VALUES (#{name}, #{address}, #{phone}, #{regionId}, #{lal})
+    </insert>
+    <update id="update" parameterType="cn.cwc.api.entity.Cinema">
+        UPDATE cinema
+        <set>
+            <if test="name!=null">name=#{name},</if>
+            <if test="address!=null">address=#{address},</if>
+            <if test="phone!=null">phone=#{phone},</if>
+            <if test="regionId!=null">region_id=#{regionId},</if>
+            <if test="lal!=null">lal=#{lal}</if>
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <select id="findAllByFilm" parameterType="cn.cwc.api.entity.Film" resultType="cn.cwc.api.entity.Cinema">
+        SELECT *
+        FROM cinema
+                 INNER JOIN cinema_film ON cinema_film.cinema_id = cinema.id
+                 INNER JOIN film ON cinema_film.film_id = film.id
+        WHERE film.id = #{id}
+    </select>
+</mapper>

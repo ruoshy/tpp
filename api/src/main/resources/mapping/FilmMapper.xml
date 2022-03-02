@@ -1,0 +1,75 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.cwc.api.mapper.FilmMapper">
+    <select id="findAll" parameterType="cn.cwc.api.entity.Film" resultType="cn.cwc.api.entity.Film">
+        SELECT * FROM film
+        <where>
+            <if test="name!=null">
+                `name` LIKE CONCAT('%',#{name},'%')
+            </if>
+            <if test="type!=null">
+                AND `type` = #{type}
+            </if>
+            <if test="makeArea!=null">
+                AND makeArea = #{makeArea}
+            </if>
+            <if test="releaseDate!=null">
+                AND DATE(release_date)
+                <if test="status==true">
+                    &lt;=
+                </if>
+                <if test="status==false">
+                    &gt;
+                </if>
+                DATE(#{releaseDate})
+            </if>
+            AND 1=1
+        </where>
+        ORDER BY release_date DESC
+    </select>
+
+    <insert id="insert">
+        INSERT INTO film(`name`, director, actor, `type`, make_area, `language`, `time`, introduce, release_date,
+                         status)
+        VALUES (#{name}, #{director}, #{actor}, #{type}, #{makeArea}, #{language}, #{time}, #{introduce},
+                #{releaseDate}, #{status})
+    </insert>
+
+    <update id="update">
+        UPDATE film
+        <set>
+            <if test="name!=null">name=#{name},</if>
+            <if test="director!=null">director=#{director},</if>
+            <if test="actor!=null">actor=#{actor},</if>
+            <if test="type!=null">`type`=#{type},</if>
+            <if test="makeArea!=null">make_area=#{makeArea},</if>
+            <if test="language!=null">`language`=#{language},</if>
+            <if test="time!=null">`time`=#{time},</if>
+            <if test="introduce!=null">introduce=#{introduce},</if>
+            <if test="releaseDate!=null">release_date=#{releaseDate},</if>
+            <if test="status!=null">status=#{status}</if>
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <select id="findByCinema" resultType="cn.cwc.api.entity.Film">
+        SELECT *
+        FROM film
+        <if test="select==true">
+            INNER JOIN cinema_film ON film.id = cinema_film.film_id
+        </if>
+        <where>
+            1=1
+            <if test="select==true">
+                AND cinema_film.cinema_id = #{cinema.id}
+            </if>
+            <if test="select==false">
+                AND id NOT IN (SELECT film_id FROM cinema_film WHERE cinema_id = #{cinema.id})
+            </if>
+            <if test="cinema.name!=null">
+                AND film.name LIKE CONCAT('%',#{cinema.name},'%')
+            </if>
+        </where>
+    </select>
+</mapper>

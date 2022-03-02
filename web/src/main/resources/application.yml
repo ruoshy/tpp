@@ -1,0 +1,17 @@
+server:
+  port: 8080
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8000/eureka
+
+spring:
+  application:
+    name: web
+  thymeleaf:
+    cache: false
+  jackson:
+    default-property-inclusion: non_null
+  web:
+    resources:
+      static-locations: classpath:/static
